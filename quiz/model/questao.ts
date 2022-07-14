@@ -1,14 +1,16 @@
+import RespostaModel from "./resposta";
+
 export default class QuestaoModel {
   #id: number;
   #enunciado: string;
-  #respostas: any[];
+  #respostas: RespostaModel[];
   #acertou: boolean;
   // #respondida: boolean;
 
   constructor(
     id: number,
     enunciado: string,
-    respostas: any[],
+    respostas: RespostaModel[],
     acertou: boolean = false
   ) {
     this.#id = id;
@@ -34,6 +36,22 @@ export default class QuestaoModel {
   }
 
   get respondida() {
+    for (let resposta of this.#respostas) {
+      if (resposta.revelada) {
+        return true;
+      }
+    }
     return false;
+  }
+
+  converterParaObjeto() {
+    return {
+      id: this.#id,
+      enunciado: this.#enunciado,
+      respostas: this.#respostas.map((resposta) =>
+        resposta.converterParaObjeto()
+      ),
+      acertou: this.#acertou
+    };
   }
 }
